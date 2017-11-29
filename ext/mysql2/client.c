@@ -428,6 +428,17 @@ static VALUE rb_connect(VALUE self, VALUE user, VALUE pass, VALUE host, VALUE po
   args.mysql       = wrapper->client;
   args.client_flag = NUM2ULONG(flags);
 
+  /* Debug client_flag is unsigned long. */
+  /*
+  printf("debug rb_connect client_flag: [%lu]\n", wrapper->client->options.client_flag);
+  int n = 1;
+  if(*(char *)&n == 1) {
+    printf("debug the system is little endian.\n");
+  } else {
+    printf("debug the system is big endian.\n");
+  }
+  */
+
   if (wrapper->connect_timeout)
     time(&start_time);
   rv = (VALUE) rb_thread_call_without_gvl(nogvl_connect, &args, RUBY_UBF_IO, 0);

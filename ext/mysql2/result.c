@@ -413,15 +413,25 @@ static VALUE rb_mysql_result_fetch_row_stmt(VALUE self, MYSQL_FIELD * fields, co
           }
           break;
         case MYSQL_TYPE_SHORT:        // short int
+        case MYSQL_TYPE_YEAR:         // short int
+          printf("debug rb_mysql_result_fetch_row_stmt type: [%d]\n", result_buffer->buffer_type);
           if (result_buffer->is_unsigned) {
             val = UINT2NUM(*((unsigned short int*)result_buffer->buffer));
+            printf("debug rb_mysql_result_fetch_row_stmt type: [%d], unsinged. buffer: [%d], length: [%lu], buffer_length: [%lu]\n",
+              result_buffer->buffer_type,
+              *((unsigned short int*)result_buffer->buffer),
+              *((unsigned long*)result_buffer->length), result_buffer->buffer_length);
           } else  {
             val = INT2NUM(*((short int*)result_buffer->buffer));
+            printf("debug rb_mysql_result_fetch_row_stmt type: [%d] singed. [%d], length: [%lu], buffer_length: [%lu]\n",
+              result_buffer->buffer_type,
+              *((short int*)result_buffer->buffer),
+              *((unsigned long*)result_buffer->length), result_buffer->buffer_length);
           }
           break;
         case MYSQL_TYPE_INT24:        // int
         case MYSQL_TYPE_LONG:         // int
-        case MYSQL_TYPE_YEAR:         // int
+        // case MYSQL_TYPE_YEAR:         // int
           if (result_buffer->is_unsigned) {
             val = UINT2NUM(*((unsigned int*)result_buffer->buffer));
           } else {
@@ -596,6 +606,7 @@ static VALUE rb_mysql_result_fetch_row(VALUE self, MYSQL_FIELD * fields, const r
         case MYSQL_TYPE_LONGLONG:   /* BIGINT field */
         case MYSQL_TYPE_YEAR:       /* YEAR field */
           val = rb_cstr2inum(row[i], 10);
+          printf("debug rb_mysql_result_fetch_row type: [%d]\n", type);
           break;
         case MYSQL_TYPE_DECIMAL:    /* DECIMAL or NUMERIC field */
         case MYSQL_TYPE_NEWDECIMAL: /* Precision math DECIMAL or NUMERIC field (MySQL 5.0.3 and up) */
