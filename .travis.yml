@@ -78,6 +78,16 @@ matrix:
       addons:
         hosts:
           - mysql2gem.example.com
+    # Test on big endian environment.
+    - language: generic
+      os: linux
+      rvm: ""
+      services: docker
+      env: DOCKER=true # just as mark.
+      before_install: true
+      addons: {}
+      install: docker build -t mysql2 -f .travis_Dockerfile .
+      script: docker run -t mysql2
   fast_finish: true
   allow_failures:
     - rvm: ruby-head

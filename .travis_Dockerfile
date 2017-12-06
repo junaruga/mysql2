@@ -1,0 +1,24 @@
+# To test on big endian environment.
+FROM s390x/ubuntu
+
+WORKDIR /work
+COPY . .
+
+# MariaDB 10.2
+RUN export DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install -y \
+  -o Dpkg::Options::='--force-confnew' \
+  mariadb \
+  mariadb-server \
+  mariadb-server-10.2 \
+  libmariadbclient18 \
+  ruby \
+  # lscpu is a part of util-linux.
+  util-linux
+RUN lscpu | grep "Byte Order" | grep "Big Endian"
+RUN echo "127.0.0.1 mysql2gem.example.com" >> /etc/hosts
+RUN gem install bundler
+RUN bundle install --path vendor/bundle --without benchmarks development
+
+CMD ["bundle exec rake"]
