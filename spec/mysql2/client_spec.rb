@@ -473,10 +473,23 @@ RSpec.describe Mysql2::Client do
 
   it "should set default program_name in connect_attrs" do
     client = new_client
+    puts("[DEBUG] Mysql2::Client::CONNECT_ATTRS: #{Mysql2::Client::CONNECT_ATTRS.to_s(2)}")
+    # puts("[DEBUG] Mysql2::Client::CONNECT_ATTRS.zero?: #{Mysql2::Client::CONNECT_ATTRS.zero?}")
+    puts("[DEBUG] client.server_capabilities: #{client.server_capabilities.to_s(2)}")
+    puts("[DEBUG] client.server_capabilities & Mysql2::Client::CONNECT_ATTRS: #{(client.server_capabilities & Mysql2::Client::CONNECT_ATTRS).to_s(2)}")
+
+    # puts("[DEBUG] client.server_info: #{client.server_info}")
+    # puts("[DEBUG] client.server_info[:version]: #{client.server_info[:version]}")
+    # puts("[DEBUG] Mysql2::Client.info[:version]: #{Mysql2::Client.info[:version]}")
+    # puts("[DEBUG] client.info[:version]: #{client.info[:version]}")
     if Mysql2::Client::CONNECT_ATTRS.zero? || client.server_info[:version].match(/10.[01].\d+-MariaDB/)
       pending('Both client and server versions must be MySQL 5.6 or MariaDB 10.2 or later.')
     end
     result = client.query("SELECT attr_value FROM performance_schema.session_account_connect_attrs WHERE processlist_id = connection_id() AND attr_name = 'program_name'")
+
+    puts("[DEBUG] result.count; #{result.count}")
+    # puts("[DEBUG] result.first: #{result.first}")
+    puts("[DEBUG] PROGRAM_NAME: #{$PROGRAM_NAME}")
     expect(result.first['attr_value']).to eq($PROGRAM_NAME)
   end
 

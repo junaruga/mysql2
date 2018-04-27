@@ -31,6 +31,7 @@ fi
 # NOTE this is a workaround until Travis CI merges a fix to its mariadb addon.
 if [[ -n ${DB-} && x$DB =~ ^xmariadb10.2 ]]; then
   sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.2 libmariadbclient18
+  sudo dpkg --print-avail libmariadbclient18
 fi
 
 # Install MySQL if OS=darwin

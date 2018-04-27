@@ -86,6 +86,7 @@ module Mysql2
       database = database.to_s unless database.nil?
       socket = socket.to_s unless socket.nil?
       conn_attrs = parse_connect_attrs(opts[:connect_attrs])
+      puts "[DEBUG] client.rb conn_attrs: #{conn_attrs}"
 
       connect user, pass, host, port, database, socket, flags, conn_attrs
     end

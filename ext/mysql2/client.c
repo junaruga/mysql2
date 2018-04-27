@@ -429,6 +429,7 @@ static VALUE rb_mysql_connect(VALUE self, VALUE user, VALUE pass, VALUE host, VA
   args.client_flag = NUM2ULONG(flags);
 
 #ifdef CLIENT_CONNECT_ATTRS
+  printf("[DEBUG] client.c rb_mysql_connect CLIENT_CONNECT_ATTRS defined.\n");
   mysql_options(wrapper->client, MYSQL_OPT_CONNECT_ATTR_RESET, 0);
   rb_hash_foreach(conn_attrs, opt_connect_attr_add_i, (VALUE)wrapper);
 #endif
@@ -1193,6 +1194,16 @@ static VALUE rb_mysql_client_encoding(VALUE self) {
 }
 
 /* call-seq:
+ *    client.server_capabilities
+ *
+ * Returns the server_capabilities.
+ */
+static VALUE rb_mysql_server_capabilities(VALUE self) {
+  GET_CLIENT(self);
+  return ULONG2NUM(wrapper->client->server_capabilities);
+}
+
+/* call-seq:
  *    client.automatic_close?
  *
  * @return [Boolean]
@@ -1427,6 +1438,7 @@ void init_mysql2_client() {
   rb_define_method(cMysql2Client, "query_info_string", rb_mysql_info, 0);
   rb_define_method(cMysql2Client, "ssl_cipher", rb_mysql_get_ssl_cipher, 0);
   rb_define_method(cMysql2Client, "encoding", rb_mysql_client_encoding, 0);
+  rb_define_method(cMysql2Client, "server_capabilities", rb_mysql_server_capabilities, 0);
 
   rb_define_private_method(cMysql2Client, "connect_timeout=", set_connect_timeout, 1);
   rb_define_private_method(cMysql2Client, "read_timeout=", set_read_timeout, 1);
@@ -1587,9 +1599,14 @@ void init_mysql2_client() {
 #endif
 
 #ifdef CLIENT_CONNECT_ATTRS
+  /*
+  printf("[DEBUG] CLIENT_CONNECT_ATTRS defined: CLIENT_CONNECT_ATTRS long: [%ld]\n", CLIENT_CONNECT_ATTRS);
+  printf("[DEBUG] CLIENT_CONNECT_ATTRS defined: CLIENT_CONNECT_ATTRS unsigned long: [%lu]\n", CLIENT_CONNECT_ATTRS);
+  */
   rb_const_set(cMysql2Client, rb_intern("CONNECT_ATTRS"),
-      LONG2NUM(CLIENT_CONNECT_ATTRS));
+      ULONG2NUM(CLIENT_CONNECT_ATTRS));
 #else
+  printf("[DEBUG] CLIENT_CONNECT_ATTRS undefined.\n");
   /* HACK because MySQL 5.5 and earlier don't define this constant,
    * but we're using it in our default connection flags. */
   rb_const_set(cMysql2Client, rb_intern("CONNECT_ATTRS"),

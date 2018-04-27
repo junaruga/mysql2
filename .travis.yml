@@ -9,6 +9,10 @@ before_install:
   - gem update bundler
   - gem --version
   - bash .travis_setup.sh
+script:
+  - bundle exec rake clean compile
+  - ldd ./lib/mysql2/mysql2.so
+  - bundle exec rake spec
 addons:
   hosts:
     - mysql2gem.example.com
@@ -18,14 +22,14 @@ addons:
     - mysql-client-core-5.6
     - mysql-client-5.6
 rvm:
-  - 2.6
+  #- 2.6
   - 2.5
-  - 2.4
-  - 2.3
-  - 2.2
-  - 2.1
-  - 2.0.0
-  - ruby-head
+  #- 2.4
+  #- 2.3
+  #- 2.2
+  #- 2.1
+  #- 2.0.0
+  #- ruby-head
 matrix:
   include:
     - rvm: 2.5

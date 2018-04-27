@@ -261,4 +261,7 @@ else
   end
 end
 
+puts "[DEBUG] CFLAGS: #{$CFLAGS}"
+puts "[DEBUG] LDFLAGS: #{$LDFLAGS}"
+puts "[DEBUG] INCFLAGS: #{$INCFLAGS}"
 create_makefile('mysql2/mysql2')
