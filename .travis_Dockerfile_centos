@@ -1,0 +1,6 @@
+FROM centos:7
+
+WORKDIR /build
+COPY . .
+
+CMD sh .travis_centos.sh
