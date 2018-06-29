@@ -408,6 +408,9 @@ static int opt_connect_attr_add_i(VALUE key, VALUE value, VALUE arg)
   key = rb_str_export_to_enc(key, enc);
   value = rb_str_export_to_enc(value, enc);
 
+  printf("[DEBUG] client.c opt_connect_attr_add_i mysql_options4 key: %s, value: %s\n",
+    StringValueCStr(key), StringValueCStr(value));
+
   mysql_options4(wrapper->client, MYSQL_OPT_CONNECT_ATTR_ADD, StringValueCStr(key), StringValueCStr(value));
   return ST_CONTINUE;
 }
@@ -428,7 +431,9 @@ static VALUE rb_mysql_connect(VALUE self, VALUE user, VALUE pass, VALUE host, VA
   args.mysql       = wrapper->client;
   args.client_flag = NUM2ULONG(flags);
 
+  printf("[DEBUG] client.c rb_mysql_connect start.\n");
 #ifdef CLIENT_CONNECT_ATTRS
+  printf("[DEBUG] client.c rb_mysql_connect CLIENT_CONNECT_ATTRS is defined.\n");
   mysql_options(wrapper->client, MYSQL_OPT_CONNECT_ATTR_RESET, 0);
   rb_hash_foreach(conn_attrs, opt_connect_attr_add_i, (VALUE)wrapper);
 #endif

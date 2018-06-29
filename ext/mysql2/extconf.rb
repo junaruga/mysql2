@@ -78,8 +78,19 @@ elsif (mc = (with_config('mysql-config') || Dir[GLOB].first))
   # MySQL 5.5 and above already have re-entrant code in libmysqlclient (no _r).
   libs = `#{mc} --libs`.chomp if ver >= 5.5 || libs.empty?
   abort unless $CHILD_STATUS.success?
+
+  # Debug
+  puts "[DEBUG] includes: #{includes}"
+  puts "[DEBUG] libs: #{libs}"
+  includes = '-I/home/jaruga/git/mariadb-connector-c/dist/include'
+  libs = '-L/home/jaruga/git/mariadb-connector-c/dist/lib64 -lmariadb -lz -ldl -lm -lpthread -lssl -lcrypto'
+
   $INCFLAGS += ' ' + includes
+  puts "[DEBUG] $INCFLAGS: #{$INCFLAGS}"
+
   $libs = libs + " " + $libs
+  puts "[DEBUG] $libs: #{$libs}"
+
   rpath_dir = libs
 else
   _, usr_local_lib = dir_config('mysql', '/usr/local')

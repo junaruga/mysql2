@@ -476,7 +476,12 @@ RSpec.describe Mysql2::Client do
     if Mysql2::Client::CONNECT_ATTRS.zero? || client.server_info[:version].match(/10.[01].\d+-MariaDB/)
       pending('Both client and server versions must be MySQL 5.6 or MariaDB 10.2 or later.')
     end
+    # Debug start
+    result = client.query("SELECT * FROM performance_schema.session_account_connect_attrs")
+    puts "[DEBUG] Issue #1 client_spec.rb debug result count: #{result.count}"
+    # Debug end
     result = client.query("SELECT attr_value FROM performance_schema.session_account_connect_attrs WHERE processlist_id = connection_id() AND attr_name = 'program_name'")
+    puts "[DEBUG] Issue #1 client_spec.rb result count: #{result.count}"
     expect(result.first['attr_value']).to eq($PROGRAM_NAME)
   end
 
@@ -486,6 +491,8 @@ RSpec.describe Mysql2::Client do
       pending('Both client and server versions must be MySQL 5.6 or MariaDB 10.2 or later.')
     end
     results = Hash[client.query("SELECT * FROM performance_schema.session_account_connect_attrs WHERE processlist_id = connection_id()").map { |x| x.values_at('ATTR_NAME', 'ATTR_VALUE') }]
+    puts "[DEBUG] Issue #2 client_spec.rb results: #{results}"
+    puts "[DEBUG] Issue #2 client_spec.rb results program_name nil?: #{results['program_name'].nil?}"
     expect(results['program_name']).to eq('my_program_name')
     expect(results['foo']).to eq('fooval')
     expect(results['bar']).to eq('barval')
