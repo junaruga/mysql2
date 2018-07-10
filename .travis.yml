@@ -74,11 +74,13 @@ matrix:
       addons:
         hosts:
           - mysql2gem.example.com
-    - rvm: 2.4
-      # Mark
-      env: DOCKER=centos
+    - env: DOCKER=centos
       before_install: true
       install: docker build -t mysql2 -f .travis_Dockerfile_centos .
+      script: docker run --add-host=mysql2gem.example.com:127.0.0.1 -t mysql2
+    - env: DOCKER=fedora
+      before_install: true
+      install: docker build -t mysql2 -f .travis_Dockerfile_fedora .
       script: docker run --add-host=mysql2gem.example.com:127.0.0.1 -t mysql2
   fast_finish: true
   allow_failures:
@@ -86,3 +88,4 @@ matrix:
     - os: osx
       rvm: 2.4
       env: DB=mysql56
+    - env: DOCKER=fedora

@@ -1,0 +1,6 @@
+FROM fedora
+
+WORKDIR /build
+COPY . .
+
+CMD sh .travis_fedora.sh
