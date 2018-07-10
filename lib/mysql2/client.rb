@@ -129,8 +129,16 @@ module Mysql2
     end
 
     def query(sql, options = {})
+      result = nil
       Thread.handle_interrupt(::Mysql2::Util::TIMEOUT_ERROR_CLASS => :never) do
-        _query(sql, @query_options.merge(options))
+        puts "[DEBUG] client.rb query sql: #{sql}, options: #{options}"
+        result = _query(sql, @query_options.merge(options))
+        puts "[DEBUG] client.rb query result class #{result.class}"
+        puts "[DEBUG] client.rb query result nil? #{result.nil?}"
+        unless result.nil?
+          puts "[DEBUG] client.rb query result count #{result.count}"
+        end
+        result
       end
     end
 

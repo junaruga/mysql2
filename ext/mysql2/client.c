@@ -585,13 +585,17 @@ static VALUE rb_mysql_client_async_result(VALUE self) {
   }
 
   is_streaming = rb_hash_aref(rb_iv_get(self, "@current_query_options"), sym_stream);
+  printf("[DEBUG] client.c rb_mysql_client_async_result wrapper client client_flag: %lu\n", wrapper->client->client_flag);
   if (is_streaming == Qtrue) {
+    printf("[DEBUG] client.c rb_mysql_client_async_result streaming: true.\n");
     result = (MYSQL_RES *)rb_thread_call_without_gvl(nogvl_use_result, wrapper, RUBY_UBF_IO, 0);
   } else {
+    printf("[DEBUG] client.c rb_mysql_client_async_result streaming: false.\n");
     result = (MYSQL_RES *)rb_thread_call_without_gvl(nogvl_store_result, wrapper, RUBY_UBF_IO, 0);
   }
 
   if (result == NULL) {
+    printf("[DEBUG] client.c rb_mysql_client_async_result result is NULL.\n");
     if (mysql_errno(wrapper->client) != 0) {
       wrapper->active_thread = Qnil;
       rb_raise_mysql2_error(wrapper);
@@ -599,6 +603,7 @@ static VALUE rb_mysql_client_async_result(VALUE self) {
     /* no data and no error, so query was not a SELECT */
     return Qnil;
   }
+  printf("[DEBUG] client.c rb_mysql_client_async_result result count: %llu\n", result->row_count);
 
   // Duplicate the options hash and put the copy in the Result object
   current = rb_hash_dup(rb_iv_get(self, "@current_query_options"));
@@ -607,6 +612,9 @@ static VALUE rb_mysql_client_async_result(VALUE self) {
   resultObj = rb_mysql_result_to_obj(self, wrapper->encoding, current, result, Qnil);
 
   rb_mysql_set_server_query_flags(wrapper->client, resultObj);
+
+  printf("[DEBUG] client.c rb_mysql_client_async_result resultObj: \n");
+  rb_p(resultObj);
 
   return resultObj;
 }
@@ -794,6 +802,7 @@ static VALUE rb_mysql_query(VALUE self, VALUE sql, VALUE current) {
 
     rb_rescue2(do_query, (VALUE)&async_args, disconnect_and_raise, self, rb_eException, (VALUE)0);
 
+    printf("[DEBUG] client.c rb_mysql_query before result.\n");
     return rb_ensure(rb_mysql_client_async_result, self, disconnect_and_mark_inactive, self);
   }
 #else
