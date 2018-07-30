@@ -2,7 +2,7 @@
 
 set -eux
 
-# Install dependency packages and start mysqld service.
+# Start mysqld service.
 sh .travis_setup_centos.sh
 
 bundle install --path vendor/bundle --without benchmarks development
