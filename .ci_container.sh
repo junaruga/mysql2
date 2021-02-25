@@ -3,7 +3,7 @@
 set -eux
 
 ruby -v
-bundle install --path vendor/bundle --without development
+bundle install --path vendor/bundle
 
 # Start mysqld service.
 bash .ci_setup_container.sh

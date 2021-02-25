@@ -29,7 +29,7 @@ group :benchmarks, optional: true do
   gem 'sequel'
 end
 
-group :development do
+group :development, optional: true do
   gem 'pry'
   gem 'rake-compiler-dock', '~> 0.7.0'
 end
