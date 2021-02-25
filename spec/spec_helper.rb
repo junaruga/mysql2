@@ -57,12 +57,22 @@ RSpec.configure do |config|
     end
   end
 
-  config.before :each do
-    @client = new_client
-  end
-
-  config.after :each do
-    @clients.each(&:close)
+  config.before(:suite) do
+    begin
+      new_client
+    rescue Mysql2::Error::ConnectionError, Mysql2::Error
+      username = DatabaseCredentials['root']['username']
+      database = DatabaseCredentials['root']['database']
+      message = <<-MESSAGE
+  Can't connect to the testing MySQL server or got an error from the server.
+  * Ensure the MySQL server is running.
+  * Ensure you can connect with the values of the root user in spec/configuration.yml
+    by `mysql -u #{username} ...`.
+  * Ensure the testing database '#{database}' for the root user in
+    spec/configuration.yml exists. If it does not exist, create the database.
+MESSAGE
+      raise message
+    end
   end
 
   config.before(:all) do
@@ -125,5 +135,13 @@ RSpec.configure do |config|
         )
       ]
     end
+  end
+
+  config.before(:each) do
+    @client = new_client
+  end
+
+  config.after(:each) do
+    @clients.each(&:close)
   end
 end
