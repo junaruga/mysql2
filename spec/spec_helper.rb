@@ -75,7 +75,7 @@ MESSAGE
     end
   end
 
-  config.before(:all) do
+  config.before(:context) do
     new_client do |client|
       client.query %[
         CREATE TABLE IF NOT EXISTS mysql2_test (
@@ -137,11 +137,11 @@ MESSAGE
     end
   end
 
-  config.before(:each) do
+  config.before(:example) do
     @client = new_client
   end
 
-  config.after(:each) do
+  config.after(:example) do
     @clients.each(&:close)
   end
 end
