@@ -21,15 +21,9 @@ matrix:
   include:
     - rvm: 2.0.0
     - rvm: 2.4
-      env: DB=mariadb10.0
+      env: DB=mariadb10.3
       addons:
-        mariadb: 10.0
-        hosts:
-          - mysql2gem.example.com
-    - rvm: 2.4
-      env: DB=mariadb10.1
-      addons:
-        mariadb: 10.1
+        mariadb: 10.3
         hosts:
           - mysql2gem.example.com
     - rvm: 2.4
@@ -39,9 +33,15 @@ matrix:
         hosts:
           - mysql2gem.example.com
     - rvm: 2.4
-      env: DB=mariadb10.3
+      env: DB=mariadb10.1
       addons:
-        mariadb: 10.3
+        mariadb: 10.1
+        hosts:
+          - mysql2gem.example.com
+    - rvm: 2.4
+      env: DB=mariadb10.0
+      addons:
+        mariadb: 10.0
         hosts:
           - mysql2gem.example.com
     - rvm: 2.4
