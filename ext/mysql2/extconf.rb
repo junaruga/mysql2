@@ -125,6 +125,14 @@ have_const('MYSQL_OPTION_MULTI_STATEMENTS_OFF', mysql_h)
 # to retain compatibility with the typedef in earlier MySQLs.
 have_type('my_bool', mysql_h)
 
+# Add flags for debug. See mkmf.rb for detail.
+# CONFIG['debugflags'] = '-gdwarf-2 -ggdb3 -g3'
+# CONFIG['optflags'] = '-O0'
+$CFLAGS.gsub!(/-O[123]/, '-O0')
+$CFLAGS << ' -O0 -gdwarf-2 -ggdb3 -g3'
+$CXXFLAGS.gsub!(/-O[123]/, '-O0')
+$CXXFLAGS << ' -O0 -gdwarf-2 -ggdb3 -g3'
+
 # This is our wishlist. We use whichever flags work on the host.
 # -Wall and -Wextra are included by default.
 wishlist = [

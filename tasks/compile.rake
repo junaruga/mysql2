@@ -2,6 +2,10 @@ require "rake/extensiontask"
 
 load File.expand_path('../../mysql2.gemspec', __FILE__) unless defined? Mysql2::GEMSPEC
 
+# A hack to run the Makefile with options.
+# https://github.com/rake-compiler/rake-compiler/blob/v1.1.1/lib/rake/extensiontask.rb#L477
+ENV['MAKE'] = 'make V=1'
+
 Rake::ExtensionTask.new("mysql2", Mysql2::GEMSPEC) do |ext|
   # put binaries into lib/mysql2/ or lib/mysql2/x.y/
   ext.lib_dir = File.join 'lib', 'mysql2'
