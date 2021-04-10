@@ -17,4 +17,8 @@ echo "
 ssl-ca=/etc/mysql/ca-cert.pem
 ssl-cert=/etc/mysql/server-cert.pem
 ssl-key=/etc/mysql/server-key.pem
+max_connections=300
 " >> my.cnf
+
+# Debug
+cat my.cnf
