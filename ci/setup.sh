@@ -120,7 +120,7 @@ max_connections=300
 
   sudo systemctl daemon-reload || true
 
-  if ! service mysql restart; then
+  if ! sudo service mysql restart; then
     # service mysql status || true
     systemctl status mysql.service || true
     systemctl status mariadb.service || true
