@@ -8,4 +8,4 @@ bundle install --path vendor/bundle --without development
 # Start mysqld service.
 bash ci/setup_container.sh
 
-bundle exec rake
+MAKE="make V=1" bundle exec rake

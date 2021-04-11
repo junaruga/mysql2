@@ -8,6 +8,8 @@ before_install:
   - gem update bundler
   - gem --version
   - bash ci/setup.sh
+script:
+  - MAKE="make V=1" bundle exec rake
 matrix:
   include:
     - rvm: 2.4
