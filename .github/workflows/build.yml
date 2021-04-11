@@ -62,6 +62,9 @@ jobs:
         run: echo 'DB=${{ matrix.db }}' >> $GITHUB_ENV
       - run: sudo echo "127.0.0.1 mysql2gem.example.com" | sudo tee -a /etc/hosts
       - run: bash ci/setup.sh
+      - run: ruby ext/mysql2/extconf.rb
+      - run: grep CFLAGS Makefile
+      - run: grep CPPFLAGS Makefile
       # Set MAKE to specify the make options.
       # https://github.com/rake-compiler/rake-compiler/blob/v1.1.1/lib/rake/extensiontask.rb#L477
       - run: MAKE="make V=1" bundle exec rake
