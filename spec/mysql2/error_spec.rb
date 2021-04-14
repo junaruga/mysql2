@@ -31,8 +31,8 @@ RSpec.describe Mysql2::Error do
     end
 
     let(:invalid_utf8) do
-      p "[DEBUG] spec/mysql2/error_spec.rb invalid #{["e5c67d1f"].pack('H*')}"
-      p "[DEBUG] spec/mysql2/error_spec.rb invalid utf8 #{["e5c67d1f"].pack('H*').force_encoding(Encoding::UTF_8)}"
+      # p "[DEBUG] spec/mysql2/error_spec.rb invalid #{["e5c67d1f"].pack('H*')}"
+      # p "[DEBUG] spec/mysql2/error_spec.rb invalid utf8 #{["e5c67d1f"].pack('H*').force_encoding(Encoding::UTF_8)}"
       ["e5c67d1f"].pack('H*').force_encoding(Encoding::UTF_8)
     end
     let(:bad_err) do
@@ -40,9 +40,9 @@ RSpec.describe Mysql2::Error do
         @client.query(invalid_utf8)
       rescue Mysql2::Error => e
         # require 'byebug'; byebug
-        p "[DEBUG] spec/mysql2/error_spec.rb bad_err message #{e.message}"
-        p "[DEBUG] spec/mysql2/error_spec.rb bad_err class #{e.class}"
-        p "[DEBUG] spec/mysql2/error_spec.rb bad_err error_number #{e.error_number}"
+        # p "[DEBUG] spec/mysql2/error_spec.rb bad_err message #{e.message}"
+        # p "[DEBUG] spec/mysql2/error_spec.rb bad_err class #{e.class}"
+        # p "[DEBUG] spec/mysql2/error_spec.rb bad_err error_number #{e.error_number}"
         e
       end
     end
