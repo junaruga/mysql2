@@ -57,6 +57,50 @@ RSpec.configure do |config|
     end
   end
 
+  def mysql_cmd(sql, database = DatabaseCredentials['root']['database'])
+    username = DatabaseCredentials['root']['username']
+    host = DatabaseCredentials['root']['host']
+    port = DatabaseCredentials['root']['port']
+    socket = DatabaseCredentials['root']['socket']
+    cmd = "mysql -u #{username}"
+    cmd << " -h #{host}" if host
+    cmd << " -P #{port}" if port
+    cmd << " -S #{socket}" if socket
+    cmd << " -e #{sql} #{database}"
+
+    puts "[DEBUG] mysql cmd: #{cmd}"
+    system(cmd)
+  end
+
+  def server_info
+    ['', 'mysql', 'information_schema', 'performance_schema', 'test'].each do |database|
+      mysql_cmd('status', database)
+    end
+
+    new_client do |client|
+      puts "Client info: #{Mysql2::Client.info}"
+      puts "Client encoding: #{client.encoding}"
+      puts "Server info: #{client.server_info}"
+
+      results = client.query %[
+        SHOW VARIABLES WHERE Variable_name IN (
+          'have_ssl',
+          'local_infile',
+          'performance_schema',
+          'performance_schema_users_size'
+        )
+      ]
+      results.each do |row|
+        puts row
+      end
+
+      results = client.query "SELECT SCHEMA_NAME, DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA"
+      results.each do |row|
+        puts row
+      end
+    end
+  end
+
   config.before(:suite) do
     begin
       new_client
@@ -72,6 +116,8 @@ Make sure that the testing database '#{database}' exists. If it does not exist, 
       warn message
       raise e
     end
+
+    server_info
   end
 
   config.before(:context) do
