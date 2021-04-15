@@ -57,6 +57,30 @@ RSpec.configure do |config|
     end
   end
 
+  def server_info
+    new_client do |client|
+      puts "Client info: #{Mysql2::Client.info}"
+      puts "Client encoding: #{client.encoding}"
+      puts "Server info: #{client.server_info}"
+
+      results = client.query %[
+        SHOW VARIABLES WHERE Variable_name IN (
+          'have_ssl',
+          'local_infile',
+          'performance_schema'
+        )
+      ]
+      results.each do |row|
+        puts row
+      end
+
+      results = client.query "SELECT SCHEMA_NAME, DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA"
+      results.each do |row|
+        puts row
+      end
+    end
+  end
+
   config.before(:suite) do
     begin
       new_client
@@ -72,6 +96,8 @@ Make sure that the testing database '#{database}' exists. If it does not exist, 
       warn message
       raise e
     end
+
+    server_info
   end
 
   config.before(:context) do
