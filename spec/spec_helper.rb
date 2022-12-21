@@ -60,6 +60,13 @@ RSpec.configure do |config|
     end
   end
 
+  def ssl_dir
+    return @ssl_dir if @ssl_dir
+
+    @ssl_dir = ENV['TEST_RUBY_MYSQL2_SSL_DIR'] || '/etc/mysql'
+    @ssl_dir
+  end
+
   config.before(:suite) do
     begin
       new_client
