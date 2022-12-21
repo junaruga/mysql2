@@ -103,7 +103,7 @@ fi
 
 # TODO: get SSL working on OS X in Travis
 if ! [[ x$OSTYPE =~ ^xdarwin ]]; then
-  sudo bash ci/ssl.sh
+  bash ci/ssl.sh
   if ! sudo service mysql restart; then
     journalctl -xe
     false
