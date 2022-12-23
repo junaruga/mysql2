@@ -30,7 +30,7 @@ commonName_default             = ca_mysql2gem
 " >> ca.cnf
 
 echo "
-commonName_default             = mysql2gem.example.com
+commonName_default             = localhost
 " >> cert.cnf
 
 # Generate a set of certificates

@@ -18,5 +18,5 @@ organizationalUnitName_default = Mysql2Gem
 emailAddress_default           = mysql2gem@example.com
 
 
-commonName_default             = mysql2gem.example.com
+commonName_default             = localhost
 
