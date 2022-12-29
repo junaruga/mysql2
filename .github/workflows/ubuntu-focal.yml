@@ -1,0 +1,43 @@
+name: Ubuntu Focal 20.04 with Ruby 2.x
+on: [push, pull_request]
+jobs:
+  build:
+    name: >-
+      ${{ matrix.os }} ruby ${{ matrix.ruby }} ${{ matrix.db }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow-failure || false }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04 # focal
+        ruby:
+          - '2.7'
+          - '2.6'
+          - '2.5'
+          - '2.4'
+          - '2.3'
+          - '2.2'
+          - '2.1'
+          - '2.0'
+        db: ['']
+        include:
+          - {os: ubuntu-20.04, ruby: '2.7', db: mariadb10.6}
+          - {os: ubuntu-20.04, ruby: '2.7', db: mysql57}
+          - {os: ubuntu-20.04, ruby: '2.7', db: mysql80}
+      # On the fail-fast: true, it cancels all in-progress jobs
+      # if any matrix job fails, which we don't want.
+      fail-fast: false
+    env:
+      BUNDLE_WITHOUT: development
+    steps:
+      - uses: actions/checkout@v3
+      # https://github.com/ruby/setup-ruby
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - if: matrix.db != ''
+        run: echo 'DB=${{ matrix.db }}' >> $GITHUB_ENV
+      - run: sudo echo "127.0.0.1 mysql2gem.example.com" | sudo tee -a /etc/hosts
+      - run: bash ci/setup.sh
+      - run: bundle exec rake spec

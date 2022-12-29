@@ -1,6 +1,6 @@
 # Test Linux distributions which do not exist on GitHub Actions
 # by the containers.
-name: Container
+name: Fedora and CentOS
 on: [push, pull_request]
 jobs:
   build:
