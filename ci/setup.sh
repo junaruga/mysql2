@@ -44,40 +44,14 @@ if [[ -n ${DB-} && x$DB =~ ^xmysql80 ]]; then
   CHANGED_PASSWORD=true
 fi
 
-# Install MariaDB client headers after Travis CI fix for MariaDB 10.2 broke earlier 10.x
-if [[ -n ${DB-} && x$DB =~ ^xmariadb10.0 ]]; then
-  if [[ -n ${GITHUB_ACTIONS-} ]]; then
-    sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.0 libmariadb2
-    CHANGED_PASSWORD_BY_RECREATE=true
-  else
-    sudo apt-get install -y -o Dpkg::Options::='--force-confnew' libmariadbclient-dev
-  fi
-fi
-
-# Install MariaDB client headers after Travis CI fix for MariaDB 10.2 broke earlier 10.x
-if [[ -n ${DB-} && x$DB =~ ^xmariadb10.1 ]]; then
-  if [[ -n ${GITHUB_ACTIONS-} ]]; then
-    sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.1 libmariadb-dev
-    CHANGED_PASSWORD_BY_RECREATE=true
-  else
-    sudo apt-get install -y -o Dpkg::Options::='--force-confnew' libmariadbclient-dev
-  fi
-fi
-
-# Install MariaDB 10.2 if DB=mariadb10.2
-# NOTE this is a workaround until Travis CI merges a fix to its mariadb addon.
-if [[ -n ${DB-} && x$DB =~ ^xmariadb10.2 ]]; then
-  sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.2 libmariadbclient18
-fi
-
-# Install MariaDB 10.3 if DB=mariadb10.3
-if [[ -n ${GITHUB_ACTIONS-} && -n ${DB-} && x$DB =~ ^xmariadb10.3 ]]; then
+# Install MariaDB 10.6 if DB=mariadb10.6
+if [[ -n ${GITHUB_ACTIONS-} && -n ${DB-} && x$DB =~ ^xmariadb10.6 ]]; then
   sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
   sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
   sudo apt-get purge -y 'mysql-common*' 'mysql-client*' 'mysql-server*'
   sudo mv /etc/mysql "/etc/mysql-$(date +%Y%m%d-%H%M%S)"
   sudo mv /var/lib/mysql "/var/lib/mysql-$(date +%Y%m%d-%H%M%S)"
-  sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.3 libmariadb-dev
+  sudo apt-get install -y -o Dpkg::Options::='--force-confnew' mariadb-server mariadb-server-10.6 libmariadb-dev
   CHANGED_PASSWORD_BY_RECREATE=true
 fi
 
