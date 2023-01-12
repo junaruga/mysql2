@@ -83,7 +83,15 @@ fi
 
 # Install MySQL/MariaDB if OS=darwin
 if [[ x$OSTYPE =~ ^xdarwin ]]; then
-  brew update > /dev/null
+  # A workaround to install mariadb or mysql brew package.
+  # https://github.com/actions/setup-python/issues/577
+  if ! brew update > /dev/null; then
+    for file in 2to3 idle3 pydoc3 python3 python3-config; do
+      rm /usr/local/bin/${file} || true
+    done
+    # Try again.
+    brew update > /dev/null
+  fi
 
   # Check available packages.
   for KEYWORD in mysql mariadb; do
@@ -91,12 +99,6 @@ if [[ x$OSTYPE =~ ^xdarwin ]]; then
   done
 
   brew info "$DB"
-
-  # A workaround to install mariadb or mysql brew package.
-  # https://github.com/actions/setup-python/issues/577
-  if ! brew install python@3.10; then
-    brew link --overwrite python@3.10
-  fi
 
   brew install "$DB"
 
