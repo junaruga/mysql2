@@ -95,11 +95,7 @@ if [[ x$OSTYPE =~ ^xdarwin ]]; then
   # A workaround to install mariadb or mysql brew package.
   # https://github.com/actions/setup-python/issues/577
   if ! brew install python@3.10; then
-    for file in 2to3 idle3 pydoc3 python3 python3-config; do
-      rm /usr/local/bin/${file} || true
-    done
-    # Try again.
-    brew install python@3.10
+    brew link --overwrite python@3.10
   fi
 
   brew install "$DB"
