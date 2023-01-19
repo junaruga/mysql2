@@ -170,6 +170,7 @@ have_type('my_bool', mysql_h)
 # -Wall and -Wextra are included by default.
 wishlist = [
   '-Weverything',
+  '-Wno-compound-token-split-by-macro', # Fixed in Ruby 2.7+ at https://bugs.ruby-lang.org/issues/17865
   '-Wno-bad-function-cast', # rb_thread_call_without_gvl returns void * that we cast to VALUE
   '-Wno-conditional-uninitialized', # false positive in client.c
   '-Wno-covered-switch-default', # result.c -- enum_field_types (when fully covered, e.g. mysql 5.5)
