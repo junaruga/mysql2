@@ -1,0 +1,48 @@
+name: Ubuntu
+on: [push, pull_request]
+jobs:
+  build:
+    name: >-
+      ${{ matrix.os }} ruby ${{ matrix.ruby }} ${{ matrix.db }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.allow-failure || false }}
+    strategy:
+      matrix:
+        include:
+          # jammy
+          - {os: ubuntu-22.04, ruby: 'head'}
+          - {os: ubuntu-22.04, ruby: '3.2'}
+          - {os: ubuntu-22.04, ruby: '3.1'}
+          - {os: ubuntu-22.04, ruby: '3.0'}
+          - {os: ubuntu-22.04, ruby: '3.0', db: mariadb10.6}
+          - {os: ubuntu-22.04, ruby: '3.0', db: mysql57}
+          - {os: ubuntu-22.04, ruby: '3.0', db: mysql80}
+          # focal
+          - {os: ubuntu-20.04, ruby: '2.7'}
+          - {os: ubuntu-20.04, ruby: '2.6'}
+          - {os: ubuntu-20.04, ruby: '2.5'}
+          - {os: ubuntu-20.04, ruby: '2.4'}
+          - {os: ubuntu-20.04, ruby: '2.3'}
+          - {os: ubuntu-20.04, ruby: '2.2'}
+          - {os: ubuntu-20.04, ruby: '2.1'}
+          - {os: ubuntu-20.04, ruby: '2.0'}
+          - {os: ubuntu-20.04, ruby: '2.7', db: mariadb10.6}
+          - {os: ubuntu-20.04, ruby: '2.7', db: mysql57}
+          - {os: ubuntu-20.04, ruby: '2.7', db: mysql80}
+      # On the fail-fast: true, it cancels all in-progress jobs
+      # if any matrix job fails, which we don't want.
+      fail-fast: false
+    env:
+      BUNDLE_WITHOUT: development
+    steps:
+      - uses: actions/checkout@v3
+      # https://github.com/ruby/setup-ruby
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - if: matrix.db
+        run: echo 'DB=${{ matrix.db }}' >> $GITHUB_ENV
+      - run: sudo echo "127.0.0.1 mysql2gem.example.com" | sudo tee -a /etc/hosts
+      - run: bash ci/setup.sh
+      - run: bundle exec rake spec
