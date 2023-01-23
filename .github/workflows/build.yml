@@ -64,7 +64,7 @@ jobs:
       - run: echo 'DB=${{ matrix.db }}' >> $GITHUB_ENV
       - run: bash ci/setup.sh
       # Set the verbose option in the Makefile to print compiling command lines.
-      - run: echo "GNUMAKEFLAGS=V=1" >> $GITHUB_ENV
+      - run: echo "MAKEFLAGS=V=1" >> $GITHUB_ENV
       - if: matrix.ssl
         run: echo "rake_spec_opts=--with-openssl-dir=$(brew --prefix ${{ matrix.ssl }})" >> $GITHUB_ENV
       - run: bundle exec rake spec -- $rake_spec_opts
