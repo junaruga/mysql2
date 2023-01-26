@@ -65,6 +65,7 @@ RSpec.configure do |config|
     return @ssl_cert_dir if @ssl_cert_dir
 
     dir = ENV['TEST_RUBY_MYSQL2_SSL_CERT_DIR']
+    puts "[DEBUG] TEST_RUBY_MYSQL2_SSL_CERT_DIR: #{dir}"
     @ssl_cert_dir = if dir && !dir.empty?
       dir
     else
