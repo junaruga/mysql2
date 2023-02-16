@@ -29,7 +29,6 @@ jobs:
       # https://bugzilla.redhat.com/show_bug.cgi?id=1900021
       - run: |
           docker run \
-            --add-host=mysql2gem.example.com:127.0.0.1 \
             -t \
             -e TEST_RUBY_MYSQL2_SSL_CERT_DIR="${{ matrix.ssl_cert_dir || '' }}" \
             --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
